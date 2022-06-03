@@ -55,7 +55,7 @@ const BottomNavigator = () => {
           name="Favourite"
           component={Favourite}
           options={{
-            headerTitle: 'Công thức yêu thích',
+            headerTitle: 'Công thức yêu thích của bạn',
             tabBarActiveBackgroundColor: Colors.colorYellow,
             tabBarInactiveBackgroundColor: 'white',
             tabBarActiveTintColor: 'black',

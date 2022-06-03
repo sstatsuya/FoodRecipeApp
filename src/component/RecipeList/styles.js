@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 12,
     marginVertical: 12,
   },
   searchWrapper: {
@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
     marginLeft: 24,
   },
   typeWrapper: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 12,
     flexGrow: 0,
   },
   typeItem: {

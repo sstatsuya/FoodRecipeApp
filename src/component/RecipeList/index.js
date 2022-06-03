@@ -67,7 +67,12 @@ const RecipeList = props => {
         <View style={styles.recipeWrapper}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
             return (
-              <TouchableOpacity style={styles.recipeItem} key={index}>
+              <TouchableOpacity
+                style={styles.recipeItem}
+                key={index}
+                onPress={() => {
+                  props.navigation.navigate('RecipeInfo', {});
+                }}>
                 <Text
                   style={styles.recipeItemText}
                   ellipsizeMode="tail"

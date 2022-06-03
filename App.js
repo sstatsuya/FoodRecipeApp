@@ -7,6 +7,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import RecipeList from './src/component/RecipeList';
 import Wrapper from './src/component/Wrapper';
+import RecipeInfo from './src/component/RecipeInfo';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,13 @@ const App = () => {
             component={Wrapper}
             options={{
               animation: 'slide_from_right',
+            }}
+          />
+          <Stack.Screen
+            name="RecipeInfo"
+            component={RecipeInfo}
+            options={{
+              animation: 'fade_from_bottom',
             }}
           />
         </Stack.Navigator>
