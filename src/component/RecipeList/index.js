@@ -12,8 +12,28 @@ import {styles} from './styles';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faSlidersH, faSearch} from '@fortawesome/free-solid-svg-icons';
 import Food1Img from '../../asset/img/food1.png';
+import {useSelector, useDispatch} from 'react-redux';
+import * as Actions from '../../redux/actions';
+import 'react-native-get-random-values';
+import {v4} from 'uuid';
+import APICaller from '../../utils/APICaller';
 
 const RecipeList = props => {
+  const recipes = useSelector(state => {
+    return state.recipes;
+  });
+  const dispatch = useDispatch();
+  const handleAddRecipe = async () => {
+    // let res = await APICaller.requestGetAllRecipe();
+    // dispatch(Actions.getAllRecipe(res.data))
+    dispatch(Actions.requestGetAllRecipe());
+    // dispatch(
+    //   Actions.addRecipe({
+    //     id: v4(),
+    //     name: 'Bánh mì Sài gòn',
+    //   }),
+    // );
+  };
   const types = [
     'All',
     'Cơm',
@@ -35,7 +55,11 @@ const RecipeList = props => {
             placeholderTextColor={'#999'}
           />
         </View>
-        <TouchableOpacity style={styles.filterBtn}>
+        <TouchableOpacity
+          style={styles.filterBtn}
+          onPress={() => {
+            handleAddRecipe();
+          }}>
           <FontAwesomeIcon icon={faSlidersH} size={24} color="#999" />
         </TouchableOpacity>
       </View>
@@ -65,10 +89,10 @@ const RecipeList = props => {
 
       <ScrollView style={styles.recipeSVWrapper}>
         <View style={styles.recipeWrapper}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+          {recipes.map((item, index) => {
             return (
               <TouchableOpacity
-                style={styles.recipeItem}
+                style={[styles.recipeItem, index === 2 ? {} : {}]}
                 key={index}
                 onPress={() => {
                   props.navigation.navigate('RecipeInfo', {});
@@ -77,7 +101,7 @@ const RecipeList = props => {
                   style={styles.recipeItemText}
                   ellipsizeMode="tail"
                   numberOfLines={1}>
-                  Xôi gà
+                  {item.name}
                 </Text>
                 <View style={styles.recipeItemImgWrapper}>
                   <Image style={styles.recipeItemImg} source={Food1Img} />

@@ -42,7 +42,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 16,
     borderRadius: 20,
-    height: 36,
+    height: 40,
     marginRight: 12,
   },
   typeItemText: {
@@ -59,22 +59,25 @@ export const styles = StyleSheet.create({
     color: 'white',
   },
   recipeSVWrapper: {
-    flex: 1,
+    width: '100%',
+    marginTop: 12,
   },
   recipeWrapper: {
+    width: '94%',
+    marginLeft: '3%',
     marginTop: 4,
     flex: 1,
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
   },
   recipeItem: {
     width: '40%',
     height: 200,
     borderRadius: 36,
     backgroundColor: 'pink',
-    marginVertical: 12,
+    marginBottom: 24,
+    marginHorizontal: '5%',
     display: 'flex',
     alignItems: 'center',
   },
@@ -83,7 +86,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginVertical: 8,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   recipeItemImgWrapper: {
     width: '80%',
