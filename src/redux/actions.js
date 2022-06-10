@@ -1,5 +1,13 @@
 import APICaller from '../utils/APICaller';
 
+// View
+export const setIsLoading = isLoading => {
+  return {
+    type: 'view/setIsLoading',
+    isLoading,
+  };
+};
+
 export const addRecipe = data => {
   return {
     type: 'recipe/add',
@@ -13,6 +21,58 @@ export const tam = () => {
   };
 };
 
+export const changeTypeFilter = id => {
+  return {
+    type: 'view/changeTypeFilter',
+    id,
+  };
+};
+
+// Type
+export const getAllType = data => {
+  return {
+    type: 'type/all',
+    data,
+  };
+};
+export const requestGetAllType = () => {
+  return async dispatch => {
+    dispatch(setIsLoading(true));
+    const res = await APICaller.requestGetAllType();
+    if (res.status > 199 && res.status < 300) {
+      dispatch(getAllType(res.data));
+    } else {
+      alert('Đã có lỗi khi get all type');
+    }
+    dispatch(setIsLoading(false));
+  };
+};
+
+
+
+export const addType = newType => {
+  return {
+    type: 'type/addType',
+    newType,
+  };
+};
+
+export const requestAddType = newType => {
+  return async dispatch => {
+    dispatch(setIsLoading(true));
+    const res = await APICaller.requestAddType(newType);
+    if (res.status > 199 && res.status < 300) {
+      dispatch(addType(newType));
+    } else {
+      alert('Đã có lỗi khi thêm type');
+      console.log(res)
+    }
+    dispatch(setIsLoading(false));
+  };
+};
+
+
+// Recipe
 export const getAllRecipe = data => {
   return {
     type: 'recipe/all',
@@ -21,8 +81,14 @@ export const getAllRecipe = data => {
 };
 
 export const requestGetAllRecipe = () => {
-  return async dispatch =>{
+  return async dispatch => {
+    dispatch(setIsLoading(true));
     const res = await APICaller.requestGetAllRecipe();
-    dispatch(getAllRecipe(res.data));
-  }
+    if (res.status > 199 && res.status < 300) {
+      dispatch(getAllRecipe(res.data));
+    } else {
+      alert('Đã có lỗi khi get all recipe');
+    }
+    dispatch(setIsLoading(false));
+  };
 };

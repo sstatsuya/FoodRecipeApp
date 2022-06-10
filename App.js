@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, View} from 'react-native';
+import {Image, SafeAreaView, View} from 'react-native';
 import Start from './src/component/Start';
 import {StatusBar} from 'react-native';
 import {Colors} from './src/constant/Styles';
@@ -10,6 +10,8 @@ import Wrapper from './src/component/Wrapper';
 import RecipeInfo from './src/component/RecipeInfo';
 import {Provider} from 'react-redux';
 import store from './src/redux/store';
+import LoadingImg from './src/asset/img/loading.gif';
+import Loading from './src/component/Loading';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +48,7 @@ const App = () => {
             />
           </Stack.Navigator>
         </NavigationContainer>
+        <Loading/>
       </SafeAreaView>
     </Provider>
   );

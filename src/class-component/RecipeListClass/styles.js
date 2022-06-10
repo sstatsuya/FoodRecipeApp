@@ -34,20 +34,16 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     marginLeft: 24,
   },
-  typeSV: {
+  typeWrapper: {
     paddingHorizontal: 12,
     flexGrow: 0,
-  },
-  typeWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   typeItem: {
     paddingVertical: 4,
     paddingHorizontal: 16,
     borderRadius: 20,
     height: 40,
-    marginHorizontal: 6,
+    marginRight: 12,
   },
   typeItemText: {
     fontWeight: 'bold',
@@ -102,32 +98,5 @@ export const styles = StyleSheet.create({
     resizeMode: 'cover',
     flex: 1,
     aspectRatio: 1,
-  },
-  showAddTypeBtn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 4,
-  },
-  addNewTypeWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  typeNewWrapper: {
-    maxWidth: 240,
-    height: '80%',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: '#999',
-    borderRadius: 36,
-    marginLeft: 12,
-    marginRight: 4,
-    paddingHorizontal: 12,
-  },
-  addTypeControlWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  addTypeControlBtn: {
-    marginHorizontal: 4,
   },
 });
