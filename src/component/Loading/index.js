@@ -2,9 +2,10 @@ import {View, Text, Image} from 'react-native';
 import React from 'react';
 import LoadingImg from '../../asset/img/loading.gif';
 import { useSelector } from 'react-redux';
+import { isLoadingSelector } from '../../redux/selector';
 
 const Loading = () => {
-  const isLoading = useSelector(state => state.view.isLoading)
+  const isLoading = useSelector(isLoadingSelector)
   if(!isLoading) return <></>
   return (
     <View

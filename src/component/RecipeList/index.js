@@ -18,6 +18,7 @@ import {
   faPlusCircle,
   faCheckCircle,
   faTimesCircle,
+  faMinusCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import Food1Img from '../../asset/img/food1.png';
 import {useSelector, useDispatch} from 'react-redux';
@@ -26,15 +27,24 @@ import 'react-native-get-random-values';
 import {v4} from 'uuid';
 import APICaller from '../../utils/APICaller';
 import {Colors} from '../../constant/Styles';
+import {filteredNameRecipes, recipesSelector, typeSearchIdSelector, typesSelector} from '../../redux/selector';
+import { viewSlice } from '../../redux/viewSlice';
 
 const RecipeList = props => {
   // Variable
   const dispatch = useDispatch();
-  const recipes = useSelector(state => state.recipes);
-  const types = useSelector(state => state.types);
-  const typeSearchId = useSelector(state => state.view.typeSearchId);
+  const recipes = useSelector(filteredNameRecipes);
+  const types = useSelector(typesSelector);
+  const typeSearchId = useSelector(typeSearchIdSelector);
   const [isAddNewType, setIsAddNewType] = useState(false);
+  const [isDeleteType, setIsDeleteType] = useState(false);
   const [newTypeNameText, setNewTypeNameText] = useState('');
+  const [searchText, setSearchText] = useState('');
+
+
+  console.log("state: "+JSON.stringify(useSelector(state=>state)))
+  // console.log("typeSearchId: "+ typeSearchId)
+  // console.log("Types: "+ JSON.stringify(types))
 
   var fadeTypeAnimation = new Animated.Value(1);
   useEffect(() => {
@@ -56,16 +66,32 @@ const RecipeList = props => {
 
   // Function
   const handleChangeTypeSearch = id => {
-    dispatch(Actions.changeTypeFilter(id));
+    dispatch(viewSlice.actions.changeTypeFilter(id));
   };
   const handleAddType = () => {
     dispatch(Actions.requestAddType({id: v4(), name: newTypeNameText}));
   };
 
+  const handleDeleteType = id => {
+    dispatch(Actions.requestDeleteType(id));
+  };
+
+  const handleChangeSearchText = (text) =>{
+    setSearchText(text)
+    dispatch(viewSlice.actions.changeSearchText(text))
+  }
+
   const handleAddRecipe = async () => {};
   if (!types) return <></>;
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.recipeAddBtn}
+        onPress={() => {
+          props.navigation.navigate('ARScreen1', {});
+        }}>
+        <FontAwesomeIcon icon={faPlus} size={32} color="white" />
+      </TouchableOpacity>
       <View style={styles.header}>
         <View style={styles.searchWrapper}>
           <FontAwesomeIcon icon={faSearch} size={24} color="#999" />
@@ -73,6 +99,8 @@ const RecipeList = props => {
             style={styles.searchInput}
             placeholder="Tìm kiếm công thức"
             placeholderTextColor={'#999'}
+            value={searchText}
+            onChangeText={text => handleChangeSearchText(text)}
           />
         </View>
         <TouchableOpacity
@@ -83,12 +111,18 @@ const RecipeList = props => {
           <FontAwesomeIcon icon={faSlidersH} size={24} color="#999" />
         </TouchableOpacity>
       </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.typeSV}>
-        <View style={styles.typeWrapper}>
-          {/* Add new type */}
+      <View style={styles.typeSection}>
+        <View style={styles.typeControlWrapper}>
+          {(isAddNewType || isDeleteType) && (
+            <TouchableOpacity
+              style={styles.addTypeControlBtn}
+              onPress={() => {
+                setIsAddNewType(false);
+                setIsDeleteType(false);
+              }}>
+              <Text style={styles.cancelTypeBtn}>Hủy</Text>
+            </TouchableOpacity>
+          )}
           {isAddNewType && (
             <View style={[styles.addNewTypeWrapper]}>
               <View style={styles.typeNewWrapper}>
@@ -99,11 +133,7 @@ const RecipeList = props => {
                   onChangeText={text => setNewTypeNameText(text)}
                 />
               </View>
-              <Animated.View
-                style={[
-                  styles.addTypeControlWrapper,
-                  {opacity: fadeTypeAnimation},
-                ]}>
+              <View style={[styles.addTypeControlWrapper]}>
                 <TouchableOpacity
                   style={styles.addTypeControlBtn}
                   onPress={() => {
@@ -115,21 +145,10 @@ const RecipeList = props => {
                     color={Colors.colorOrange}
                   />
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.addTypeControlBtn}
-                  onPress={() => {
-                    setIsAddNewType(false);
-                  }}>
-                  <FontAwesomeIcon
-                    icon={faTimesCircle}
-                    size={36}
-                    color={Colors.colorGray}
-                  />
-                </TouchableOpacity>
-              </Animated.View>
+              </View>
             </View>
           )}
-          {!isAddNewType && (
+          {!isAddNewType && !isDeleteType && (
             <TouchableOpacity
               style={styles.showAddTypeBtn}
               onPress={() => {
@@ -142,29 +161,65 @@ const RecipeList = props => {
               />
             </TouchableOpacity>
           )}
-          {types.map((item, index) => {
-            return (
-              <TouchableOpacity
-                style={[
-                  styles.typeItem,
-                  item.id === typeSearchId ? styles.typeItemActive : {},
-                ]}
-                key={item.id}
-                onPress={() => {
-                  handleChangeTypeSearch(item.id);
-                }}>
-                <Text
-                  style={[
-                    styles.typeItemText,
-                    item.id === typeSearchId ? styles.typeItemTextActive : {},
-                  ]}>
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
+          {!isDeleteType && !isAddNewType && (
+            <TouchableOpacity
+              style={styles.showAddTypeBtn}
+              onPress={() => {
+                setIsDeleteType(true);
+              }}>
+              <FontAwesomeIcon
+                icon={faMinusCircle}
+                size={36}
+                color={Colors.colorOrange}
+              />
+            </TouchableOpacity>
+          )}
         </View>
-      </ScrollView>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.typeSV}>
+          <View style={styles.typeWrapper}>
+            {/* Add new type */}
+            {types.map((item, index) => {
+              return (
+                <TouchableOpacity
+                  style={[
+                    styles.typeItem,
+                    item.id == typeSearchId ? styles.typeItemActive : {},
+                  ]}
+                  key={item.id}
+                  onPress={() => {
+                    handleChangeTypeSearch(item.id);
+                  }}>
+                  {isDeleteType && index !== 0 && (
+                    <TouchableOpacity
+                      style={styles.deleteTypeBtn}
+                      onPress={() => {
+                        handleDeleteType(item.id);
+                      }}>
+                      <Animated.View style={{opacity: fadeTypeAnimation}}>
+                        <FontAwesomeIcon
+                          icon={faTimesCircle}
+                          size={24}
+                          color="#ccc"
+                        />
+                      </Animated.View>
+                    </TouchableOpacity>
+                  )}
+                  <Text
+                    style={[
+                      styles.typeItemText,
+                      item.id == typeSearchId ? styles.typeItemTextActive : {},
+                    ]}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </ScrollView>
+      </View>
 
       <ScrollView style={styles.recipeSVWrapper}>
         <View style={styles.recipeWrapper}>

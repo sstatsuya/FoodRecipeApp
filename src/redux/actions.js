@@ -15,9 +15,12 @@ export const addRecipe = data => {
   };
 };
 
-export const tam = () => {
+export const changeSearchText = text => {
   return {
-    type: 'tam',
+    type: 'view/changeSearchText',
+    payload: {
+      text,
+    },
   };
 };
 
@@ -48,8 +51,6 @@ export const requestGetAllType = () => {
   };
 };
 
-
-
 export const addType = newType => {
   return {
     type: 'type/addType',
@@ -65,12 +66,32 @@ export const requestAddType = newType => {
       dispatch(addType(newType));
     } else {
       alert('Đã có lỗi khi thêm type');
-      console.log(res)
+      console.log(res);
     }
     dispatch(setIsLoading(false));
   };
 };
 
+export const deleteType = typeId => {
+  return {
+    type: 'type/deleteType',
+    typeId,
+  };
+};
+
+export const requestDeleteType = typeId => {
+  return async dispatch => {
+    dispatch(setIsLoading(true));
+    let res = await APICaller.requestDeleteType(typeId);
+    if (res.status > 199 && res.status < 300) {
+      dispatch(deleteType(typeId));
+    } else {
+      console.log(res);
+      alert('Đã có lỗi khi xóa type ' + res.status);
+    }
+    dispatch(setIsLoading(false));
+  };
+};
 
 // Recipe
 export const getAllRecipe = data => {

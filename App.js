@@ -12,44 +12,63 @@ import {Provider} from 'react-redux';
 import store from './src/redux/store';
 import LoadingImg from './src/asset/img/loading.gif';
 import Loading from './src/component/Loading';
+import ARScreen1 from './src/component/AddRecipe/ARScreen1';
+import ARScreen2 from './src/component/AddRecipe/ARScreen2';
+import {Provider as PaperProvider} from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
     <Provider store={store}>
-      <SafeAreaView style={{flex: 1}}>
-        <StatusBar
-          backgroundColor={Colors.colorYellow}
-          barStyle="dark-content"
-        />
-        <NavigationContainer>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen
-              name="Start"
-              component={Start}
-              options={{
-                animation: 'slide_from_right',
-              }}
-            />
-            <Stack.Screen
-              name="Wrapper"
-              component={Wrapper}
-              options={{
-                animation: 'slide_from_right',
-              }}
-            />
-            <Stack.Screen
-              name="RecipeInfo"
-              component={RecipeInfo}
-              options={{
-                animation: 'fade_from_bottom',
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <Loading/>
-      </SafeAreaView>
+      <PaperProvider>
+        <SafeAreaView style={{flex: 1}}>
+          <StatusBar
+            backgroundColor={Colors.colorYellow}
+            barStyle="dark-content"
+          />
+          <NavigationContainer>
+            <Stack.Navigator screenOptions={{headerShown: false}}>
+              <Stack.Screen
+                name="Start"
+                component={Start}
+                options={{
+                  animation: 'slide_from_right',
+                }}
+              />
+              <Stack.Screen
+                name="Wrapper"
+                component={Wrapper}
+                options={{
+                  animation: 'slide_from_right',
+                }}
+              />
+              <Stack.Screen
+                name="RecipeInfo"
+                component={RecipeInfo}
+                options={{
+                  animation: 'fade_from_bottom',
+                }}
+              />
+              <Stack.Screen
+                name="ARScreen1"
+                component={ARScreen1}
+                options={{
+                  animation: 'slide_from_right',
+                }}
+              />
+              <Stack.Screen
+                name="ARScreen2"
+                component={ARScreen2}
+                options={{
+                  animation: 'slide_from_right',
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+          <Loading />
+        </SafeAreaView>
+      </PaperProvider>
     </Provider>
   );
 };

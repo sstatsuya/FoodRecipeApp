@@ -5,13 +5,24 @@ import StartImg from '../../asset/img/start.gif';
 import {styles} from './styles';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Actions from '../../redux/actions';
+import {getAllTypes, typeSlice} from '../../redux/typeSlice';
+import {getAllRecipes, recipeSlice} from '../../redux/recipeSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { typesSelector } from '../../redux/selector';
 
 const Start = props => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(Actions.requestGetAllType());
-    dispatch(Actions.requestGetAllRecipe());
+    // dispatch(Actions.requestGetAllType());
+    // dispatch(Actions.requestGetAllRecipe());
+    // dispatch(typeSlice.actions.getAll())
+    // dispatch(recipeSlice.actions.getAll())
+    dispatch(getAllTypes())
+    dispatch(getAllRecipes())
   }, []);
+
+  // const types = useSelector(typesSelector)
+  // console.log("Types: "+ JSON.stringify(types))
 
   return (
     <View style={styles.container}>

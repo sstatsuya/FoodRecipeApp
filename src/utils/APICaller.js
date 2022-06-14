@@ -13,20 +13,13 @@ export default APICaller = {
   },
 
   requestAddType: async newType => {
-    console.log(
-      'JSON: ' +
-        JSON.stringify({
-          id: newType.id,
-          name: newType.name,
-        }),
-    );
     return axios({
       method: 'POST',
-      url: `http://localhost:3000/type/add`,
-      data: JSON.stringify({
+      url: `https://tien-food-recipe.herokuapp.com/type/add`,
+      data: {
         id: newType.id,
         name: newType.name,
-      }),
+      },
     })
       .then(res => res)
       .catch(err => err.response);

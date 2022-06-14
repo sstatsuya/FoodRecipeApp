@@ -34,13 +34,24 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     marginLeft: 24,
   },
+  typeSection: {
+    width: '100%',
+    paddingHorizontal: '5%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  typeControlWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   typeSV: {
-    paddingHorizontal: 12,
+    // flex: 1,
     flexGrow: 0,
   },
   typeWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    height: 60,
   },
   typeItem: {
     paddingVertical: 4,
@@ -106,7 +117,7 @@ export const styles = StyleSheet.create({
   showAddTypeBtn: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginHorizontal: 4,
+    marginRight: 8,
   },
   addNewTypeWrapper: {
     flexDirection: 'row',
@@ -119,7 +130,6 @@ export const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#999',
     borderRadius: 36,
-    marginLeft: 12,
     marginRight: 4,
     paddingHorizontal: 12,
   },
@@ -129,5 +139,30 @@ export const styles = StyleSheet.create({
   },
   addTypeControlBtn: {
     marginHorizontal: 4,
+  },
+  deleteTypeBtn: {
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    zIndex: 2,
+  },
+  cancelTypeBtn: {
+    textDecorationLine: 'underline',
+    fontSize: 16,
+    color: '#666',
+    fontWeight: 'bold',
+    marginRight: 12,
+  },
+  recipeAddBtn: {
+    backgroundColor: Colors.colorOrange,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    width: 60,
+    aspectRatio: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 360,
+    zIndex: 2,
   },
 });
