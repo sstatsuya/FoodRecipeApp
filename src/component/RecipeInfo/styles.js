@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     paddingHorizontal: '5%',
-    paddingBottom: 36
+    paddingBottom: 36,
   },
   header: {
     width: '100%',
@@ -22,11 +22,17 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: 360,
   },
+  foodImg: {
+    resizeMode: 'cover',
+    flex: 1,
+    aspectRatio: 1,
+  },
   foodName: {
     fontSize: 32,
     color: 'black',
     fontWeight: 'bold',
     alignSelf: 'flex-start',
+    marginTop: 12,
   },
   foodInfo: {
     alignSelf: 'flex-start',
@@ -35,13 +41,29 @@ export const styles = StyleSheet.create({
     marginVertical: 4,
     fontSize: 16,
   },
+  types: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginVertical: 8
+  },
+  typeItem: {
+    padding: 12,
+    backgroundColor: '#ccc',
+    borderRadius: 12,
+    marginRight: 8,
+  },
+  typeText: {
+    color: 'black',
+  },
   featureWrapper: {
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginTop: 8
+    marginTop: 8,
   },
   feature: {
     width: '25%',

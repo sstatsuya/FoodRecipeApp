@@ -7,18 +7,33 @@ import {useDispatch, useSelector} from 'react-redux';
 import * as Actions from '../../redux/actions';
 import {getAllTypes, typeSlice} from '../../redux/typeSlice';
 import {getAllRecipes, recipeSlice} from '../../redux/recipeSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { typesSelector } from '../../redux/selector';
+import {unwrapResult} from '@reduxjs/toolkit';
+import {typesSelector} from '../../redux/selector';
+import {getType} from '../../graphql/query';
+import { useQuery } from '@apollo/client/react';
+import { viewSlice } from '../../redux/viewSlice';
 
 const Start = props => {
   const dispatch = useDispatch();
+  const {loading, error, data} = useQuery(getType);
+  if (loading){
+    dispatch(viewSlice.actions.setIsLoading(true))
+  }
+  else{
+    dispatch(viewSlice.actions.setIsLoading(false))
+  }
+  if (error) console.log('Error...');
+  if (data){
+    dispatch(typeSlice.actions.getAll({data: data.types}))
+    dispatch(recipeSlice.actions.getAll({data: data.recipes}))
+  }
   useEffect(() => {
     // dispatch(Actions.requestGetAllType());
     // dispatch(Actions.requestGetAllRecipe());
     // dispatch(typeSlice.actions.getAll())
     // dispatch(recipeSlice.actions.getAll())
-    dispatch(getAllTypes())
-    dispatch(getAllRecipes())
+    // dispatch(getAllTypes());
+    // dispatch(getAllRecipes());
   }, []);
 
   // const types = useSelector(typesSelector)

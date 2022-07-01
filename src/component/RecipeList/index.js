@@ -6,11 +6,11 @@ import {
   ScrollView,
   Image,
   Animated,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import BottomNavigator from '../BottomNavigator';
-import {styles} from './styles';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+} from "react-native";
+import React, {useEffect, useState} from "react";
+import BottomNavigator from "../BottomNavigator";
+import {styles} from "./styles";
+import {FontAwesomeIcon} from "@fortawesome/react-native-fontawesome";
 import {
   faSlidersH,
   faSearch,
@@ -19,32 +19,38 @@ import {
   faCheckCircle,
   faTimesCircle,
   faMinusCircle,
-} from '@fortawesome/free-solid-svg-icons';
-import Food1Img from '../../asset/img/food1.png';
-import {useSelector, useDispatch} from 'react-redux';
-import * as Actions from '../../redux/actions';
-import 'react-native-get-random-values';
-import {v4} from 'uuid';
-import APICaller from '../../utils/APICaller';
-import {Colors} from '../../constant/Styles';
-import {filteredNameRecipes, recipesSelector, typeSearchIdSelector, typesSelector} from '../../redux/selector';
-import { viewSlice } from '../../redux/viewSlice';
+} from "@fortawesome/free-solid-svg-icons";
+import Food1Img from "../../asset/img/food1.png";
+import {useSelector, useDispatch} from "react-redux";
+import * as Actions from "../../redux/actions";
+import "react-native-get-random-values";
+import {v4} from "uuid";
+import APICaller from "../../utils/APICaller";
+import {Colors} from "../../constant/Styles";
+import {
+  filteredNameRecipes,
+  homeTypes,
+  homeTypeSelector,
+  recipesSelector,
+  typeSearchIdSelector,
+  typesSelector,
+} from "../../redux/selector";
+import {viewSlice} from "../../redux/viewSlice";
+import Function from "../../utils/Function";
+import {useMutation} from "@apollo/client";
+import {addTypeGQL, deleteTypeGQL} from "../../graphql/mutation";
+import {typeSlice} from "../../redux/typeSlice";
 
 const RecipeList = props => {
   // Variable
   const dispatch = useDispatch();
   const recipes = useSelector(filteredNameRecipes);
-  const types = useSelector(typesSelector);
+  const types = useSelector(homeTypeSelector);
   const typeSearchId = useSelector(typeSearchIdSelector);
   const [isAddNewType, setIsAddNewType] = useState(false);
   const [isDeleteType, setIsDeleteType] = useState(false);
-  const [newTypeNameText, setNewTypeNameText] = useState('');
-  const [searchText, setSearchText] = useState('');
-
-
-  console.log("state: "+JSON.stringify(useSelector(state=>state)))
-  // console.log("typeSearchId: "+ typeSearchId)
-  // console.log("Types: "+ JSON.stringify(types))
+  const [newTypeNameText, setNewTypeNameText] = useState("");
+  const [searchText, setSearchText] = useState("");
 
   var fadeTypeAnimation = new Animated.Value(1);
   useEffect(() => {
@@ -68,18 +74,69 @@ const RecipeList = props => {
   const handleChangeTypeSearch = id => {
     dispatch(viewSlice.actions.changeTypeFilter(id));
   };
+
+  
+  // Handle when add Type
+  const [addType, addTypeData] =
+  useMutation(addTypeGQL);
+  useEffect(() => {
+    if (addTypeData.loading) {
+      dispatch(viewSlice.actions.setIsLoading(true));
+    } else {
+      dispatch(viewSlice.actions.setIsLoading(false));
+      if (addTypeData.data) {
+        Function.showToast("success", "Thêm loại công thức thành công");
+        let newType = {...addTypeData.data.addType};
+        dispatch(typeSlice.actions.addType(newType));
+        setNewTypeNameText("")
+        addTypeData.reset();
+      }
+    }
+  }, [addTypeData.loading]);
+
+  // Hanlde when delete Type
+const [deleteType, deleteTypeData] = useMutation(deleteTypeGQL)
+useEffect(()=>{
+  if(deleteTypeData.loading){
+    dispatch(viewSlice.actions.setIsLoading(true))
+  }
+  else{
+    dispatch(viewSlice.actions.setIsLoading(false))
+    if(deleteTypeData.data){
+      Function.showToast("success", "Xóa loại công thức thành công")
+      dispatch(typeSlice.actions.deleteType(deleteTypeData.data.deleteType._id))
+      deleteTypeData.reset()
+    }
+  }
+}, [deleteTypeData.loading])
+
+
   const handleAddType = () => {
-    dispatch(Actions.requestAddType({id: v4(), name: newTypeNameText}));
+    const newType = {
+      id: v4(),
+      name: newTypeNameText,
+    };
+    addType({
+      variables: {
+        _id: newType.id,
+        name: newType.name,
+      },
+    });
+    // console.log("data: "+data)
   };
 
   const handleDeleteType = id => {
-    dispatch(Actions.requestDeleteType(id));
+    deleteType({
+      variables: {
+        _id: id
+      }
+    })
   };
 
-  const handleChangeSearchText = (text) =>{
-    setSearchText(text)
-    dispatch(viewSlice.actions.changeSearchText(text))
-  }
+  const handleChangeSearchText = text => {
+    setSearchText(text);
+    dispatch(viewSlice.actions.changeSearchText(text));
+  };
 
   const handleAddRecipe = async () => {};
   if (!types) return <></>;
@@ -88,7 +145,7 @@ const RecipeList = props => {
       <TouchableOpacity
         style={styles.recipeAddBtn}
         onPress={() => {
-          props.navigation.navigate('ARScreen1', {});
+          props.navigation.navigate("ARScreen1", {});
         }}>
         <FontAwesomeIcon icon={faPlus} size={32} color="white" />
       </TouchableOpacity>
@@ -98,7 +155,7 @@ const RecipeList = props => {
           <TextInput
             style={styles.searchInput}
             placeholder="Tìm kiếm công thức"
-            placeholderTextColor={'#999'}
+            placeholderTextColor={"#999"}
             value={searchText}
             onChangeText={text => handleChangeSearchText(text)}
           />
@@ -188,7 +245,7 @@ const RecipeList = props => {
                     styles.typeItem,
                     item.id == typeSearchId ? styles.typeItemActive : {},
                   ]}
-                  key={item.id}
+                  key={index}
                   onPress={() => {
                     handleChangeTypeSearch(item.id);
                   }}>
@@ -224,13 +281,16 @@ const RecipeList = props => {
       <ScrollView style={styles.recipeSVWrapper}>
         <View style={styles.recipeWrapper}>
           {recipes.map((item, index) => {
-            if (item.typeID === typeSearchId || typeSearchId < 0)
+            let obj = item.typeList.find(i => {
+              return i._id == typeSearchId;
+            });
+            if (obj || typeSearchId < 0)
               return (
                 <TouchableOpacity
-                  style={styles.recipeItem}
+                  style={[styles.recipeItem, {backgroundColor: item.bg}]}
                   key={index}
                   onPress={() => {
-                    props.navigation.navigate('RecipeInfo', {});
+                    props.navigation.navigate("RecipeInfo", {recipe: item});
                   }}>
                   <Text
                     style={styles.recipeItemText}
@@ -239,7 +299,10 @@ const RecipeList = props => {
                     {item.name}
                   </Text>
                   <View style={styles.recipeItemImgWrapper}>
-                    <Image style={styles.recipeItemImg} source={Food1Img} />
+                    <Image
+                      style={styles.recipeItemImg}
+                      source={{uri: "data:image/png;base64," + item.image}}
+                    />
                   </View>
                 </TouchableOpacity>
               );

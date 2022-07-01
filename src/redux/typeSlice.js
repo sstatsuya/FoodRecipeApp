@@ -31,13 +31,14 @@
 
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import APICaller from '../utils/APICaller';
-import { viewSlice } from './viewSlice';
+import Function from '../utils/Function';
+import {viewSlice} from './viewSlice';
 export const getAllTypes = createAsyncThunk(
   'type/getAll',
   async (params, thunkAPI) => {
-    thunkAPI.dispatch(viewSlice.actions.setIsLoading(true))
+    thunkAPI.dispatch(viewSlice.actions.setIsLoading(true));
     const res = await APICaller.requestGetAllType();
-    thunkAPI.dispatch(viewSlice.actions.setIsLoading(false))
+    thunkAPI.dispatch(viewSlice.actions.setIsLoading(false));
     return res.data;
   },
 );
@@ -46,45 +47,36 @@ export const typeSlice = createSlice({
   initialState: [],
   reducers: {
     getAll: (state, action) => {
-      state.push({
-        id: '-1',
-        name: 'Tất cả',
-      });
-      for (let i = 0; i < action.data.length; i++) {
+      for (let i = 0; i < action.payload.data.length; i++) {
         state.push({
-          id: action.data[i]._id,
-          name: action.data[i].name,
+          id: action.payload.data[i]._id,
+          name: action.payload.data[i].name
         });
       }
     },
     addType: (state, action) => {
-      state.push(action.newType);
+      state.push({
+        id: action.payload.id,
+        name: action.payload.name
+      })
     },
     deleteType: (state, action) => {
-      state = state.filter(type => type.id !== action.typeId);
+      state = state.filter(type => type.id !== action.payload);
+      return state
     },
   },
   extraReducers: {
-    [getAllTypes.pending]: state => {
-      console.log('pending');
-    },
+    [getAllTypes.pending]: state => {},
     [getAllTypes.fulfilled]: (state, action) => {
-      console.log('fulfilled');
-      state = []
-      state.push({
-        id: '-1',
-        name: 'Tất cả',
-      });
+      state = [];
       for (let i = 0; i < action.payload.length; i++) {
         state.push({
           id: action.payload[i]._id,
           name: action.payload[i].name,
         });
       }
-      return state
+      return state;
     },
-    [getAllTypes.rejected]: state => {
-      console.log('rejected');
-    },
+    [getAllTypes.rejected]: state => {},
   },
 });

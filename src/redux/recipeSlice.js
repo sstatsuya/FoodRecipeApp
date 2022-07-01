@@ -12,6 +12,7 @@
 
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import APICaller from '../utils/APICaller';
+import Function from '../utils/Function';
 import {viewSlice} from './viewSlice';
 export const getAllRecipes = createAsyncThunk(
   'recipe/getAll',
@@ -26,18 +27,29 @@ export const recipeSlice = createSlice({
   name: 'recipes',
   initialState: [],
   reducers: {
+    reset: () => state = initialState,
     getAll: (state, action) => {
-      state = [...action.data];
+      for (let i = 0; i < action.payload.data.length; i++) {
+        state.push({
+          ...action.payload.data[i],
+          id: action.payload.data[i]._id,
+          bg: '#' + Function.randomColor() + '33'
+        });
+      }
     },
     addRecipe: (state, action) => {
-      state.push(action.data);
+      state.push({
+        ...action.payload,
+        id: action.payload._id,
+        bg: '#' + Function.randomColor() + '33'
+      });
     },
   },
   extraReducers: {
     [getAllRecipes.pending]: (state, action) => {},
     [getAllRecipes.fulfilled]: (state, action) => {
-      state = action.payload
-      return state
+      state = action.payload;
+      return state;
     },
     [getAllRecipes.rejected]: (state, action) => {},
   },

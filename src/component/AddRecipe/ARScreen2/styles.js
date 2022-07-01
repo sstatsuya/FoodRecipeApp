@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 4,
+    paddingBottom: 80
   },
   title: {
     fontSize: 24,
@@ -20,7 +21,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     color: 'black',
     fontWeight: 'bold',
-    marginBottom: 4,
+    marginBottom: 8,
   },
   inputWrapper: {
     borderColor: '#bbb',
@@ -66,7 +67,7 @@ export const styles = StyleSheet.create({
   },
   pickImgBtn: {
     width: '100%',
-    backgroundColor: 'blue',
+    backgroundColor: Colors.colorYellow,
     borderRadius: 10,
     paddingVertical: 16,
     display: 'flex',
@@ -76,8 +77,39 @@ export const styles = StyleSheet.create({
   },
   pickImgTxt: {
     fontSize: 16,
-    color: 'white',
+    color: 'black',
     fontWeight: 'bold',
     textTransform: 'uppercase',
+  },
+  ingredientWrapper: {
+    width: '100%',
+    paddingHorizontal: '10%',
+  },
+  ingredientItem: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ingredientBorder: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: '#999',
+  },
+  ingredientName: {
+    flex: 3,
+    backgroundColor: '#ddd',
+  },
+  ingredientAmount: {
+    flex: 1,
+  },
+  removeBtn:{
+    marginLeft: 8,
+  },
+  addIngredientBtn: {
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 4,
   },
 });

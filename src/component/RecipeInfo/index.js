@@ -16,31 +16,48 @@ import {
   faAngleLeft,
   faClock,
   faUtensils,
-  faSmileBeam,
+  faGrinBeam,
+  faGrinHearts,
+  faDizzy,
 } from '@fortawesome/free-solid-svg-icons';
 import Food1Img from '../../asset/img/food1.png';
+import {Colors} from '../../constant/Styles';
+import {Fragment} from 'react';
 
 const RecipeInfo = props => {
+  const recipe = props.recipe ? props.recipe : {...props.route?.params?.recipe};
+  // console.log('Here: ' + JSON.stringify(recipe));
   return (
     <ScrollView>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.backBtn}
-            onPress={() => {
-              props.navigation.goBack();
-            }}>
-            <FontAwesomeIcon icon={faAngleLeft} size={32} />
-          </TouchableOpacity>
-        </View>
+        {!props.isEdit && (
+          <View style={styles.header}>
+            <TouchableOpacity
+              style={styles.backBtn}
+              onPress={() => {
+                props.navigation.goBack();
+              }}>
+              <FontAwesomeIcon icon={faAngleLeft} size={32} />
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.imgWrapper}>
-          <Image source={Food1Img} style={styles.foodImg} />
+          <Image
+            source={{uri: 'data:image/png;base64,' + recipe.image}}
+            style={styles.foodImg}
+          />
         </View>
-        <Text style={styles.foodName}>Xôi gà</Text>
-        <Text style={styles.foodInfo}>
-          Một món ăn gì đó Một món ăn gì đó Một món ăn gì đó Một món ăn gì đó gì
-          đó Một món ăn gì đó gì đó Một món ăn gì đó
-        </Text>
+        <Text style={styles.foodName}>{recipe.name}</Text>
+        <Text style={styles.foodInfo}>{recipe.intro}</Text>
+        <View style={styles.types}>
+          {recipe.typeList.map((type, index) => {
+            return (
+              <View key={index} style={styles.typeItem}>
+                <Text style={styles.typeText}>{type.name}</Text>
+              </View>
+            );
+          })}
+        </View>
         <View style={styles.featureWrapper}>
           <View style={[styles.feature, {backgroundColor: '#97AEFF'}]}>
             <FontAwesomeIcon
@@ -49,7 +66,7 @@ const RecipeInfo = props => {
               size={28}
               color="black"
             />
-            <Text style={styles.featureText}>30 mins</Text>
+            <Text style={styles.featureText}>{recipe.time} mins</Text>
           </View>
           <View style={[styles.feature, {backgroundColor: '#E3C7FF'}]}>
             <FontAwesomeIcon
@@ -58,60 +75,55 @@ const RecipeInfo = props => {
               size={28}
               color="black"
             />
-            <Text style={styles.featureText}>30 mins</Text>
+            <Text style={styles.featureText}>
+              {recipe.number} person{recipe.number < 2 ? '' : 's'}
+            </Text>
           </View>
-          <View style={[styles.feature, {backgroundColor: '#BAF5C0'}]}>
+          <View
+            style={[
+              styles.feature,
+              {
+                backgroundColor:
+                  recipe.level.toLowerCase() === 'easy'
+                    ? '#BAF5C0'
+                    : recipe.level.toLowerCase() === 'medium'
+                    ? Colors.colorYellow
+                    : '#FF1E21',
+              },
+            ]}>
             <FontAwesomeIcon
               style={{opacity: 0.9}}
-              icon={faSmileBeam}
+              icon={
+                recipe.level.toLowerCase() === 'easy'
+                  ? faGrinHearts
+                  : recipe.level.toLowerCase() === 'medium'
+                  ? faGrinBeam
+                  : faDizzy
+              }
               size={28}
               color="black"
             />
-            <Text style={styles.featureText}>30 mins</Text>
+            <Text style={styles.featureText}>{recipe.level}</Text>
           </View>
         </View>
 
         <Text style={styles.sectionTitle}>Thành phần</Text>
         <View style={styles.ingredientWrapper}>
-          <>
-            <View style={styles.ingreName}>
-              <Text style={styles.ingreNameText}>Gạo</Text>
-            </View>
-            <View style={styles.ingreAmount}>
-              <Text style={styles.ingreAmountText}>300gr</Text>
-            </View>
-          </>
-          <>
-            <View style={styles.ingreName}>
-              <Text style={styles.ingreNameText}>Gạo</Text>
-            </View>
-            <View style={styles.ingreAmount}>
-              <Text style={styles.ingreAmountText}>300gr</Text>
-            </View>
-          </>
-          <>
-            <View style={styles.ingreName}>
-              <Text style={styles.ingreNameText}>Gạo</Text>
-            </View>
-            <View style={styles.ingreAmount}>
-              <Text style={styles.ingreAmountText}>300gr</Text>
-            </View>
-          </>
+          {recipe.ingredients.map((item, index) => {
+            return (
+              <Fragment key={index}>
+                <View style={styles.ingreName}>
+                  <Text style={styles.ingreNameText}>{item.name}</Text>
+                </View>
+                <View style={styles.ingreAmount}>
+                  <Text style={styles.ingreAmountText}>{item.amount}</Text>
+                </View>
+              </Fragment>
+            );
+          })}
         </View>
         <Text style={styles.sectionTitle}>Cách thực hiện</Text>
-        <Text style={styles.recipeDetail}>
-          Gà rửa sạch, cho vào nồi đổ ngập nước, thêm 2 muỗng bột nghệ, vài lát
-          gừng đập dập và luộc trong khoảng 20-30 phút. Sau khi gà chín, vớt gà
-          ra khỏi nồi, để nguội và xé nhỏ. Gạo nếp vo sạch, để ráo nước. Phi tỏi
-          với dầu ăn và cho gạo nếp vào xào trong khoảng 3 phút. Cho nước luộc
-          gà vào gạo đã xào và nấu cơm nếp. Lưu ý, chỉ cho lượng nhỏ nước bởi
-          gạo nếp cần ít nước để nấu chín hơn so với gạo tẻ. Hành tây thái lát
-          mỏng, ngâm trong nước đá lạnh khoảng 10 phút và vớt ra để ráo nước.
-          Cho vào bát to gà xé, hành tây, rau răm, ớt tỏi băm, nước cốt chanh,
-          nước mắm và trộn đều. Nêm nếm lại gia vị cho vừa ăn. Cho xôi đã nấu
-          chín ra đĩa, rưới thêm dầu tỏi hoặc hành phi lên trên ăn chung với
-          thịt gà xé.
-        </Text>
+        <Text style={styles.recipeDetail}>{recipe.tutorial}</Text>
       </View>
     </ScrollView>
   );
